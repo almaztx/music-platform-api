@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+/jspm_packages/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Optional npm cache files
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Built/Generated files
+/dist
+/build
+.env # Recommended for environment variables
+
+# IDEs and other tools (examples)
+.vscode # VS Code settings
+.idea   # WebStorm/IntelliJ
+.cache
+.project
+.classpath
+
+# Environment variables
+.env
+.env.test
+
+# Testing
+/coverage
