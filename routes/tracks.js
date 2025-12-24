@@ -3,16 +3,35 @@ const router = express.Router();
 const Track = require("../models/Track");
 const { protect } = require("../middleware/auth");
 
-// @route   GET /api/tracks
-// @desc    Барлық тректерді алу
+// @route   GET /api/tracks?page=1&limit=10
+// GET /api/tracks # Default: page=1, limit=10
+// @desc    Барлық тректерді алу (pagination)
 // @access  Public
 router.get("/", async (req, res) => {
     try {
-        const tracks = await Track.find().populate("artist", "name genres");
+        // Pagination параметрлері
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Жалпы саны
+        const total = await Track.countDocuments();
+
+        // Тректерді алу
+        const tracks = await Track.find()
+            .populate("artist", "name genres")
+            .skip(skip)
+            .limit(limit);
 
         res.status(200).json({
             success: true,
             count: tracks.length,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit),
+            },
             data: tracks,
         });
     } catch (error) {

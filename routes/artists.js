@@ -6,15 +6,30 @@ const spotifyService = require("../services/spotify");
 const { protect } = require("../middleware/auth");
 
 // @route   GET /api/artists
-// @desc    Барлық артистерді алу
+// @desc    Барлық артистерді алу (pagination)
 // @access  Public
 router.get("/", async (req, res) => {
     try {
-        const artists = await Artist.find();
+        // Pagination параметрлері
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Жалпы саны
+        const total = await Artist.countDocuments();
+
+        // Артистерді алу
+        const artists = await Artist.find().skip(skip).limit(limit);
 
         res.status(200).json({
             success: true,
             count: artists.length,
+            pagination: {
+                page,
+                limit,
+                total,
+                pages: Math.ceil(total / limit),
+            },
             data: artists,
         });
     } catch (error) {
